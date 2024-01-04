@@ -4,4 +4,4 @@ if __name__ == "__main__":
     sumint = 0
     for j in range(1, len(argv)):
         sumint += int(argv[j])
-        print("{}".format(sumint))
+    print("{}".format(sumint))
