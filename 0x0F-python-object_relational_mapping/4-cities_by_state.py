@@ -1,27 +1,23 @@
 #!/usr/bin/python3
-"""
-The script lists all cities from
-the database `hbtn_0e_4_usa`.
-"""
+"""Module that lists all states from the hbtn_0e_0_usa database."""
 
-import MySQLdb as db
-from sys import argv
+import sys
+import MySQLdb
 
-if __name__ == '__main__':
-    """
-    Access the database and get the cities
-    from the database.
-    """
+if __name__ == "__main__":
+    # Get MySQL credentials and search name from command-line arguments
+    db = MySQLdb.connect(user=sys.argv[1], passwd=sys.argv[2], db=sys.argv[3])
 
-    db_connect = db.connect(host="localhost", port=3306,
-                            user=argv[1], passwd=argv[2], db=argv[3])
+    # Connect to MySQL server
+    c = db.cursor()
 
-    with db_connect.cursor() as db_cursor:
-        db_cursor.execute("SELECT cities.id, cities.name, states.name \
-                                FROM cities JOIN states ON cities.state_id \
-                                = states.id ORDER BY cities.id ASC")
-        rows_selected = db_cursor.fetchall()
+    # Execute the SQL query to retrieve all states
+    c.execute("SELECT `c`.`id`, `c`.`name`, `s`.`name` \
+                 FROM `cities` as `c` \
+                INNER JOIN `states` as `s` \
+                   ON `c`.`state_id` = `s`.`id` \
+                ORDER BY `c`.`id`")
 
-    if rows_selected is not None:
-        for row in rows_selected:
-            print(row)
+    # Fetch all rows and print the states
+    [print(city) for city in c.fetchall()]
+
